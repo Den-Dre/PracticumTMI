@@ -7,22 +7,29 @@ from matplotlib import pyplot as plt
 from matplotlib import style
 
 
-def print_hi(name):
+def plotter():
 
     style.use('ggplot')
 
-    # Use a breakpoint in the code line below to debug your script.
-    print("Hi")
-    x, y = np.loadtxt('../bruteForce.txt', unpack=True, delimiter=',')
-    plt.title('Brute Force')
+    x_bf, y_bf = np.loadtxt('../bruteForce.txt', unpack=True, delimiter=',')
+    x_nsl, y_nsl = np.loadtxt('../naiveSweepline.txt', unpack=True, delimiter=',')
+    x_sl, y_sl = np.loadtxt('../sweepLine.txt', unpack=True, delimiter=',')
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    plt.title('Plots for three algorithms')
     plt.ylabel('Intersections')
     plt.xlabel('Number of Circles')
-    plt.plot(x, y)
+    # ax = plt.subplot(111)
+
+    ax.plot(x_bf, y_bf, label="Brute Force", alpha=0.5, c="b", ls="solid")
+    ax.plot(x_bf, y_nsl, label="Naive Sweepline", c="r", ls="dotted", linewidth=1.5)
+    ax.plot(x_bf, y_sl, label="Sweepline", c="m")
+    plt.legend()
     plt.show()
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
+    plotter()
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

@@ -144,7 +144,7 @@ public class Main {
             if (p.getType() == Type.START) {
 
                 // ------------- Bovenste halfcirkel ---------------------
-                double upperTip = myRound(p.getParent().getY() + p.getParent().getRadius(), 3);
+                double upperTip = myRound(p.getParent().getY() + p.getParent().getRadius(), 4);
                 current = new HalfCircle(p.getParent().getX(),p.getParent().getY(),p.getParent().getRadius(),Type.START,Orientation.UPPER);
                 TipTuple upperTipTuple = new TipTuple(upperTip, current);
                 active.put(upperTipTuple, current);
@@ -165,7 +165,7 @@ public class Main {
 
 
                 // ------------- Onderste halfcirkel ---------------------
-                double lowerTip = myRound(p.getParent().getY() - p.getParent().getRadius(), 3);
+                double lowerTip = myRound(p.getParent().getY() - p.getParent().getRadius(), 4);
                 current = new HalfCircle(p.getParent().getX(),p.getParent().getY(),p.getParent().getRadius(),Type.START,Orientation.LOWER);
                 TipTuple lowerTipTuple = new TipTuple(lowerTip, current);
                 active.put(lowerTipTuple, current);
@@ -188,7 +188,7 @@ public class Main {
                 // Als dit punt het einde van een cirkel is: verwijder de twee bijhorende halfcirkels
 
                 // ------------- Bovenste halfcirkel ---------------------
-                double upperTip = myRound(p.getParent().getY() + p.getParent().getRadius(), 3);
+                double upperTip = myRound(p.getParent().getY() + p.getParent().getRadius(), 4);
                 current = new HalfCircle(p.getParent().getX(),p.getParent().getY(),p.getParent().getRadius(),Type.END,Orientation.UPPER);
                 TipTuple upperTipTuple = new TipTuple(upperTip, current);
 
@@ -202,7 +202,7 @@ public class Main {
                     active.remove(upperTipTuple);
 
                 // ------------- Onderste halfcirkel ---------------------
-                double lowerTip = myRound(p.getParent().getY() - p.getParent().getRadius(), 3);
+                double lowerTip = myRound(p.getParent().getY() - p.getParent().getRadius(), 4);
                 current = new HalfCircle(p.getParent().getX(),p.getParent().getY(),p.getParent().getRadius(),Type.END,Orientation.LOWER);
                 TipTuple lowerTipTuple = new TipTuple(lowerTip, current);
 
@@ -257,8 +257,8 @@ static class pointComparator implements Comparator<Point> {
         for (Circle c : circles) {
 //            eventPoints.add(new Point(Math.round((c.getX() - c.getRadius()) * 1.00)/ 1.00, c.getY(), Type.START, c));
 //            eventPoints.add(new Point(Math.round((c.getX() + c.getRadius()) * 1.00) / 1.00, c.getY(), Type.END, c));
-            eventPoints.add(new Point(myRound(c.getX() - c.getRadius(), 3), c.getY(), Type.START, c));
-            eventPoints.add(new Point(myRound(c.getX() + c.getRadius(), 3) , c.getY(), Type.END, c));
+            eventPoints.add(new Point(myRound(c.getX() - c.getRadius(), 4), c.getY(), Type.START, c));
+            eventPoints.add(new Point(myRound(c.getX() + c.getRadius(), 4) , c.getY(), Type.END, c));
         }
         return eventPoints;
     }
@@ -285,10 +285,10 @@ static class pointComparator implements Comparator<Point> {
         double centerY = y1 - y2;
         double R = sqrt(centerX * centerX + centerY * centerY);
 
-        c.inc();
-
         if (!(abs(r1 - r2) <= R && R <= r1 + r2))
             return new Point[0]; // no intersection points
+
+        c.inc();
 
         double R2 = R*R;
         double R4 = R2*R2;
@@ -342,6 +342,8 @@ static class pointComparator implements Comparator<Point> {
 
         if (!(abs(r1 - r2) <= R && R <= r1 + r2))
             return new Point[0]; // no intersection points
+
+        c.inc();
 
         double R2 = R*R;
         double R4 = R2*R2;
