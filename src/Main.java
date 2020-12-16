@@ -15,6 +15,10 @@ enum Orientation {
 }
 
 public class Main {
+
+    // Global variable to count number of intersect-calls in algorithms
+    public static Counter c = new Counter();
+
     public static void main(String[] args) throws IOException {
 //        System.out.println(Arrays.toString(intersect(new HalfCircle(0.5, 0.4, 0.2, null, Orientation.UPPER),
 //                                                     new HalfCircle(0.7, 0.6, 0.3, null, Orientation.LOWER))));
@@ -62,6 +66,7 @@ public class Main {
 
     public static void bruteForce(Circle[] circles) throws IOException {
         Stopwatch sw = new Stopwatch();
+        c.reset();
         List<Point> resPoints = new ArrayList<>();
         Circle c1, c2;
         Point[] points;
@@ -80,7 +85,7 @@ public class Main {
 
     public static void naiveSweepLine(Circle[] circles) throws IOException {
         Stopwatch sw = new Stopwatch();
-
+        c.reset();
         List<Point> resPoints = new ArrayList<>();
         List<Point> eventPoints = getEventPoints(circles);
         eventPoints.sort(new pointComparator());
@@ -119,14 +124,14 @@ public class Main {
 
     public static void sweepLine(Circle[] circles) throws IOException {
         Stopwatch sw = new Stopwatch();
-
+        c.reset();
         List<Point> resPoints = new ArrayList<>();
         List<Point> eventPoints = getEventPoints(circles);
         eventPoints.sort(new pointComparator());
         TreeMap<TipTuple, HalfCircle> active = new TreeMap<>();
 //        RedBlackBST<TipTuple, HalfCircle> active1 = new RedBlackBST<>();
         HalfCircle boven, onder, current;
-rom te        Point[] intersecting;
+        Point[] intersecting;
 
         /*
          TODO: In de input van het voorbeeld wordt er nog één snijpunt niet gevonden, nl.:\\
@@ -280,6 +285,8 @@ static class pointComparator implements Comparator<Point> {
         double centerY = y1 - y2;
         double R = sqrt(centerX * centerX + centerY * centerY);
 
+        c.inc();
+
         if (!(abs(r1 - r2) <= R && R <= r1 + r2))
             return new Point[0]; // no intersection points
 
@@ -299,6 +306,7 @@ static class pointComparator implements Comparator<Point> {
         double iy1 = fy + gy;
         double iy2 = fy - gy;
 
+
         /*        if (c1 instanceof HalfCircle && c2 instanceof HalfCircle) {
             Orientation o1 = ((HalfCircle) c1).getOrientation();
             Orientation o2 = ((HalfCircle) c2).getOrientation();
@@ -313,6 +321,7 @@ static class pointComparator implements Comparator<Point> {
             //else
             //   throw new OperationNotSupportedException("Not a valid combination of semicircle `Orientation`s");
         }*/
+
 
         return new Point[]{new Point(ix1, iy1), new Point(ix2, iy2)};
     }
