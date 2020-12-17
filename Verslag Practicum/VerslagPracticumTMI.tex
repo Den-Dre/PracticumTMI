@@ -7,7 +7,7 @@
 \usepackage{caption}
 \usepackage {xcolor}
 \usepackage{amsmath}
-\usepackage[]{algorithm2e}
+\usepackage[ruled]{algorithm2e} % linesnumbered: optie om lijnnummers weer te geven
 \definecolor {processblue}{cmyk}{0.96,0,0,0}
 
 \usepackage{listings}
@@ -135,9 +135,9 @@ Om dit probleem op te lossen, splitsen we elke cirkel op in een bovenste en onde
 	\KwResult{Lijst \texttt{S} van alle snijpunten tussen alle cirkels in \texttt{L}}
 	\texttt{EventPoints} $\leftarrow$ Gesorteerde lijst \texttt{EventPoints} met start- en eindpunten van alle cirkels\\
 	\texttt{S} $ \leftarrow \emptyset $\\
-	Rood-Zwart-boom \texttt{Actief} $\leftarrow \emptyset$\\
+	\nl Rood-Zwart-boom \texttt{Actief} $\leftarrow \emptyset$\\\label{alg:sort}
 	HalfCirkel boven, onder, huidig\\
-	\ForEach{Punt \texttt{P} in \texttt{EventPoints}}{
+	\nl \ForEach{Punt \texttt{P} in \texttt{EventPoints}}{\label{alg:for}
 		\eIf{Eventpunt P is een startpunt}
 			{
 				// \textbf{Geval bovenste halfcirkel}\\
@@ -179,8 +179,65 @@ waarbij de methodes \texttt{Boven(T,c)} en \texttt{Onder(T,c)} de methodes zoals
 Om de actieve half-cirkels bij te houden, moeten we gebruik maken van een data-structuur die \textit{insert}- en \textit{delete}-operaties in logaritmische tijd kan uitvoeren, om binnen de perken van de gevraagde tijdscomplexiteit te blijven. Hiervoor maken we gebruik van een Rood-Zwart-boom: een binaire boomstructuur die zichzelf balanceert en waarvan we bijgvolg kunnen afleiden dat ze deze operaties in de gewenste logaritmische tijd kan uitvoeren. In \textit{Java} wordt deze structuur geïmplementeerd door de \texttt{TreeMap}-class, waarvan we in de implementatie ook gebruikmaken.
 
 \subsection{Tijdscomplexiteit}
+We analyseren het algoritme stap voor stap om de tijdscomplexiteit ervan te bepalen en veronderstellen een input van $N$ cirkels.
+\begin{itemize}
+	\item  We starten bij lijn \ref{alg:sort}: hier wordt de lijst van eindpunten van de cirkels gesorteerd, met behulp van mergesort weten we dat we dit in $\mathcal{O}(\log N)$ tijd kunnen realiseren.
+	\item Op lijn \ref{alg:for} start de \texttt{for}-lus over alle eindupnten van de cirkels: dit zijn er $2N$. Bijgevolg zal deze lus hoogstens $2N$ keer uitgevoerd worden. In deze \texttt{for}-lus worden drie soorten operaties uitgevoerd:
+	\begin{itemize}
+		\item Ten eerste \texttt{insert-, remove-, Boven-} en \texttt{Onder}-operaties op de Rood-Zwart-boom \texttt{Actief}. Hiervan weten we dat ze alledrie in $\mathcal{O}(\log N)$ tijd kunnen worden uitgevoerd.
+		\item  Ten tweede: \texttt{intersect}-oproepen. De uitvoeringstijd hiervan is onafhankelijk van het aantal cirkels $N$, aangezien ze telkens slechts op twee cirkels wordt uitgevoerd, i.e. $\mathcal{O}(1)$
+		\item Ten slotte: operaties die de bovenste of onderste halfcirkel genereren die waartoe \texttt{huidig} behoort. Dit kan in constante tijd gebeuren, aangezien voor elk punt uit \texttt{EventPoints} een verwijzing naar zijn `parent'-cirkel wordt bijgehouden: $\mathcal{O}(1)$.
+	\end{itemize}
+\end{itemize}
+We stellen vast dat er één sorteeroperatie plaatsgrijpt ($\mathcal{O}()\log N)$)en dat alle operaties binnen de \texttt{for}-lus hoogstens $2N$ keer worden uitgevoerd. Tussen twee cirkels zijn hoogstens twee snijpunten en op elk gegeven moment kunnen er zich maximaal $N$ cirkels in \texttt{Actief} bevinden. Concreet levert dit ons:
+\begin{itemize}
+	\item  \textbf{P is een startpunt}\\
+	We hebben $6$ operaties van $\mathcal{O}(1)$ (nl. 4 \texttt{intersect}-oproepen en twee creaties van halfcirkels), $4$ Zwart-Rood-boom operaties (\texttt{Boven} en \texttt{Onder}) voor telkens hoogstens $2$ snijpunten en ten slotte $2$ Zwart-Rood-boom operaties voor de twee huidige halfcirkels. Dit levert ons:
+	\begin{align*}
+	&6 \mathcal{O}(1) + 2 \mathcal{O}(\log N)  + 2 \left(4 \cdot \mathcal{O}(\log N)\right)\\
+	&= 10\mathcal{O}(\log N)
+	\end{align*} 
+	\item \textbf{P is een eindpunt}\\
+\end{itemize}
 
 
+\section{Experimenten}
+\subsection{Maatstaf Complexiteit}
+Zoals eerder vermeld, hebben we in dit onderzoek de keuze gemaakt om de complexiteit uit te drukken in functie van het aantal \texttt{intersect}-oproepen, i.p.v. de ruwe rekentijd. In dit onderdeel zullen we hiervoor een argumentatie en motivatie geven.
+
+Een eerste zaak die we moeten aantonen is dat in het algemene geval de rekentijd grotendeels bepaald wordt door het aantal \texttt{intersect}-oproepen dat gedaan wordt bij de uitvoering van een algoritme. Theoretisch gezien stamt dit idee van het feit dat de engige twee aspecten van de drie algoritmes die in uitvoeringstijd zullen toenemen naargelang de invoer toeneemt de volgende zijn:
+\begin{itemize}
+\item  de zoekoperaties in de Rood-Zwart-Boom (enkel van toepassing voor het finale sweep line-algoritme) enerzijds, en
+\item  het aantal berekeningen op snijpunten tussen twee cirkels (\texttt{intersect}-oproepen) anderzijds.
+
+Nu maken we de veronderstelling dat van deze twee factoren, het aantal berekeningen op snijpunten het meeste zal doorwegen in de totale benodigde uitvoeringstijd. Om deze veronderstelling te bevestigen, testen we dit experimenteel.
+\end{itemize}
+
+\subsection{Opbouw}
+Om een diverse opbouw van experimenten op te bouwen, delen we ze op in volgende deel-experimenten die elks een verschillend aspect van de algoritmes proberen toe te lichten:
+\begin{itemize}
+	\item \textbf{Aantal Cirkels}\\
+		In dit eerste experiment analyseren we eenvoudigweg wat het aantal \texttt{intersect}-oproepen is in functie van het aantal cirkels dat als input gegeven wordt. 
+	\item \textbf{Positionering Cirkels}\\
+		Hier testen we uit hoe verschillende onderlinge liggingen van cirkels ten opzichte van elkaar invloed hebben op de efficiëntie van de algoritmen, zoals we ook hebben besproken in de vorige respectievelijke secties over tijdscomplexiteit.
+\end{itemize}
+
+\subsection{Aantal Cirkels}
+In dit eerste experiment testen we de drie algoritmes op eenzelfde input, die toeneemt tot een aantal van zo'n $1000$ input-cirkels waarvan de snijpunten moeten gevonden worden:
+
+\begin{center}
+	\makebox[\textwidth]{\includegraphics[width=\linewidth]{../plots/ThreeAlgorithmsVisualised}}
+\end{center}
+
+Hierbij stellen we vast dat zowel de brute force algoritme als het naïeve sweep line-algoritme een kwadratisch verloop vertonen, qua aantal `intersect'-operaties in functie van het aantal input-cirkels.
+
+
+%\begin{figure}[h!]
+%	\centering
+%	
+%	\caption[Aantal intersect-operaties in functie van het aantal cirkels]{}
+%	\label{fig:variabeleN}
+%\end{figure}
 
 
 \end{document}

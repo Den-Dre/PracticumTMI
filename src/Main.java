@@ -125,6 +125,7 @@ public class Main {
     public static void sweepLine(Circle[] circles) throws IOException {
         Stopwatch sw = new Stopwatch();
         c.reset();
+
         List<Point> resPoints = new ArrayList<>();
         List<Point> eventPoints = getEventPoints(circles);
         eventPoints.sort(new pointComparator());
@@ -234,11 +235,11 @@ static class pointComparator implements Comparator<Point> {
             } else if (other.getType() == Type.END && point.getType() == Type.START) {
                 return -1;
             } else {
-                System.out.println("This case is not handled in the pointComparator");
+                //System.out.println("This case is not handled in the pointComparator");
                 return 0;
             }
         } else {
-            System.out.println("This case is not handled in the pointComparator");
+            //System.out.println("This case is not handled in the pointComparator");
             return 0;
         }
     }
