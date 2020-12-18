@@ -5,14 +5,16 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage {xcolor}
+\usepackage{float}
 \usepackage{amsmath}
+\usepackage{titlesec}
 \usepackage[ruled]{algorithm2e} % linesnumbered: optie om lijnnummers weer te geven
-\definecolor {processblue}{cmyk}{0.96,0,0,0}
-
 \usepackage{listings}
 \usepackage{color}
 
+\definecolor {processblue}{cmyk}{0.96,0,0,0}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -33,6 +35,13 @@
 	breakatwhitespace=true,
 	tabsize=3
 }
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 
 %opening
@@ -70,7 +79,7 @@ Waarbij de notatie $ \texttt{L}_{>i} $ gebruiken om de cirkels aan te duiden uit
 \textbf{Aanpak analyse tijdscomplexiteit}\\
 We bespreken de tijdscomplexiteit in functie van het aantal cirkels uit de invoer, nl.: $ N $. Daar waar in complexiteitsanalyse van sorteeralgoritmes bijvoorbeeld het aantal \texttt{compare}-operaties tussen twee elementen uit de invoer wordt gebruikt als maatstaf voor de uitvoeringstijd, zullen we hier gebruikmaken van het aantal \texttt{intersect}-operaties. Een \texttt{intersect}-operatie krijgt als invoer twee cirkels en berekent het aantal snijpunten tussen deze twee cirkels. De verantwoording achter de \texttt{intersect}-operatie als maatstaf voor de uitvoeringskost te kiezen, is dat deze methode het `duurste' deel is van alledrie de algoritmes. De rest van de algoritmes bestaat uit het opbouwen en doorlopen van gegevensstructuren, wat constant is in kost onafgezien van de grootte van de invoer $ N $. 
 
-\subsubsection{Tijdscomplexiteit Brute Force-algoritme}
+\subsubsection{Tijdscomplexiteit Brute Force-algoritme}\label{sec:brute-force}
 Aangezien voor elke cirkel die behandeld wordt, zal vergeleken worden met alle cirkels uit de invoer die op deze huidige cirkel volgen, kunnen we het aantal \texttt{intersect}-operaties als volgt noteren:
 
 \begin{align*}
@@ -110,7 +119,7 @@ Het idee achter deze naïeve implementatie van een sweepline-algoritme voor het 
 \end{algorithm}
 Waarbij we met \texttt{P.Cirkel} de cirkel bedoelen waarvan het punt \texttt{P} het start- of eindpunt is.
  
-\subsubsection{Tijdscomplexiteit}
+\subsubsection{Tijdscomplexiteit}\label{sec:naiveSL}
 Een algemene uitdrukking geven voor de tijdscomplexiteit is niet mogelijk voor dit algoritme, aangezien dit sterk afhankelijk is van de ligging van de cirkels. Omwille van deze reden, delen we de analyse op in drie scenario's:
 \begin{enumerate}
 	\item \textbf{Best case: Disjuncte $ x $-intervallen}\\
@@ -129,6 +138,8 @@ De werkwijze van het vorige algoritme kan nog verder verfijnd worden. In de vori
 
 Om dit probleem op te lossen, splitsen we elke cirkel op in een bovenste en onderste halfcirkel, en nemen we als $ y $-coördinaat voor een halfcirkel de $ y$-coördinaat van het resp. hoogste en laagste punt op de cirkel. Op deze manier kunnen we een totale orde op de halfcirkels definiëren wanneer te sweepline zich op $x$-coördinaat $ a $ bevindt. Deze orde noteren we als: $ <_a $. Door het probleem op deze manier aan te passen, reduceert het probleem zich tot het vinden van snijpunten in een verzameling rechten, waarvoor we het geziene sweepline-algoritme kunnen gebruiken. Dit resulteert dan ook in zeer gelijkaardige code als deze die gezien is in de cursus, zoals is weergegeven in volgende paragraaf. 
 
+\newpage
+\thispagestyle{empty}
 \subsubsection{Pseudo-code}
 \begin{algorithm}[H]
 	\KwIn{Lijst \texttt{L} met middelpunten en stralen van cirkels}
@@ -189,55 +200,148 @@ We analyseren het algoritme stap voor stap om de tijdscomplexiteit ervan te bepa
 		\item Ten slotte: operaties die de bovenste of onderste halfcirkel genereren die waartoe \texttt{huidig} behoort. Dit kan in constante tijd gebeuren, aangezien voor elk punt uit \texttt{EventPoints} een verwijzing naar zijn `parent'-cirkel wordt bijgehouden: $\mathcal{O}(1)$.
 	\end{itemize}
 \end{itemize}
-We stellen vast dat er één sorteeroperatie plaatsgrijpt ($\mathcal{O}()\log N)$)en dat alle operaties binnen de \texttt{for}-lus hoogstens $2N$ keer worden uitgevoerd. Tussen twee cirkels zijn hoogstens twee snijpunten en op elk gegeven moment kunnen er zich maximaal $N$ cirkels in \texttt{Actief} bevinden. Concreet levert dit ons:
-\begin{itemize}
-	\item  \textbf{P is een startpunt}\\
-	We hebben $6$ operaties van $\mathcal{O}(1)$ (nl. 4 \texttt{intersect}-oproepen en twee creaties van halfcirkels), $4$ Zwart-Rood-boom operaties (\texttt{Boven} en \texttt{Onder}) voor telkens hoogstens $2$ snijpunten en ten slotte $2$ Zwart-Rood-boom operaties voor de twee huidige halfcirkels. Dit levert ons:
-	\begin{align*}
-	&6 \mathcal{O}(1) + 2 \mathcal{O}(\log N)  + 2 \left(4 \cdot \mathcal{O}(\log N)\right)\\
-	&= 10\mathcal{O}(\log N)
-	\end{align*} 
-	\item \textbf{P is een eindpunt}\\
-\end{itemize}
+We stellen vast dat er één sorteeroperatie plaatsgrijpt: $\mathcal{O}(N\log N)$, en dat alle operaties binnen de \texttt{for}-lus maximum $\mathcal{O}(\log N)$ zijn en deze hoogstens $2N$ keer worden uitgevoerd. Op elk gegeven moment kunnen er zich maximaal $N$ cirkels in \texttt{Actief} bevinden.
+
+De \texttt{for}-loop die start op lijn \ref{alg:for} omvat twee soorten instructies: 
+\begin{enumerate}
+	\item Enerzijds instructies die enkel moeten uitgevoerd worden indien er die iteratie snijpunten gevonden worden tussen \texttt{huidig} en \texttt{Boven(Actief, huidig)} of \texttt{Onder(Actief, huidig)}, nl.: het toevoegen van deze snijpunten aan \texttt{Actief}, en \label{puntje:1}
+	\item Anderzijds instructies die elke iteratie worden uitgevoerd, ongeacht of er al dan niet snijpunten gevonden worden.\label{puntje:2}
+\end{enumerate}
+We analyseren beide gevallen apart en vatten samen als volgt:
+\begin{enumerate}
+	\item Van de instructies omschreven in bovenstaand puntje \ref{puntje:1}., weten we dat deze - zoals we omschreven in het begin van deze paragraaf - zich $\mathcal{O}(\log N)$ gedragen. % Met de $2N$ iteraties van de \texttt{for}-lus inbegrepen, levert dit dus een tijdscomplexiteit van $\mathcal{O}(2N\log N)$.
+	\item Van de instructies omschreven in puntje \ref{puntje:2}., weten we dat ook deze zich $\mathcal{O}(\log N)$ gedragen zoals voordien besproken. Deze instructies worden slechts voor elk snijpunt uitgevoerd. Stel - zonder verlies van algemeenheid - dat er bij invoer van $N$ cirkels, in het totaal $S$ snijpunten zijn.% Dan levert deze verzameling van instructies een tijdscomplexiteit van $\mathcal{O}(S\log N)$.
+\end{enumerate}
+Indien we beide gevallen samennemen, stellen we vast dat in het totaal hoogstens $2N+S$ keer een instrucie wordt uitgevoerd die zich hoogstens gedraagd als $\mathcal{O}(\log N)$. Met andere woorden, de totale tijdscomplexiteit van het efficiënte sweep line-algoritme reduceert tot:
+
+\begin{alignat*}{2}
+& &&\mathcal{O}((2N+S)\log N) \\
+&\equiv\quad && \mathcal{O}((N+S)\log N)\\
+\end{alignat*}
+Vermits we bij $\mathcal{O}$-notatie constante factoren mogen verwaarlozen.
+
+%\begin{itemize}
+%	\item  \textbf{P is een startpunt}\\
+%	We hebben $6$ operaties van $\mathcal{O}(1)$ (nl. 4 \texttt{intersect}-oproepen en twee creaties van halfcirkels), $4$ Zwart-Rood-boom operaties (\texttt{Boven} en \texttt{Onder}) voor telkens hoogstens $2$ snijpunten en ten slotte $2$ Zwart-Rood-boom operaties voor de twee huidige halfcirkels. Dit levert ons:
+%	\begin{align*}
+%	&6 \mathcal{O}(1) + 2 \mathcal{O}(\log N)  + 2 \left(4 \cdot \mathcal{O}(\log N)\right)\\
+%	&= 10\mathcal{O}(\log N)
+%	\end{align*} 
+%	\item \textbf{P is een eindpunt}\\
+%	Analoog hebben we hier $2$ constante tijd-operaties om de halfcirkels aan te maken, hoogstens $4 \cdot 2$ snijpunten om toe te voegen aan de Rood-Zwart-Boom en $2$ verwijder-operaties uit de Rood-Zwart-Boom: dus hoogstens $10$ Rood-Zwart-boom-operaties. We vinden analoog:
+%	\begin{align*}
+%	&2 \mathcal{O}(1) + 10\mathcal{O}(\log N) \\
+%	&= 10\mathcal{O}(\log N)
+%	\end{align*}
+%\end{itemize}
 
 
 \section{Experimenten}
 \subsection{Maatstaf Complexiteit}
 Zoals eerder vermeld, hebben we in dit onderzoek de keuze gemaakt om de complexiteit uit te drukken in functie van het aantal \texttt{intersect}-oproepen, i.p.v. de ruwe rekentijd. In dit onderdeel zullen we hiervoor een argumentatie en motivatie geven.
 
-Een eerste zaak die we moeten aantonen is dat in het algemene geval de rekentijd grotendeels bepaald wordt door het aantal \texttt{intersect}-oproepen dat gedaan wordt bij de uitvoering van een algoritme. Theoretisch gezien stamt dit idee van het feit dat de engige twee aspecten van de drie algoritmes die in uitvoeringstijd zullen toenemen naargelang de invoer toeneemt de volgende zijn:
+Een eerste zaak die we moeten aantonen is dat in het algemene geval de rekentijd grotendeels bepaald wordt door het aantal \texttt{intersect}-oproepen dat gedaan wordt bij de uitvoering van een algoritme. Theoretisch gezien stamt dit idee van het feit dat de enige twee aspecten van de drie algoritmes die in uitvoeringstijd zullen toenemen naargelang de invoer toeneemt, de volgende zijn:
 \begin{itemize}
-\item  de zoekoperaties in de Rood-Zwart-Boom (enkel van toepassing voor het finale sweep line-algoritme) enerzijds, en
-\item  het aantal berekeningen op snijpunten tussen twee cirkels (\texttt{intersect}-oproepen) anderzijds.
-
-Nu maken we de veronderstelling dat van deze twee factoren, het aantal berekeningen op snijpunten het meeste zal doorwegen in de totale benodigde uitvoeringstijd. Om deze veronderstelling te bevestigen, testen we dit experimenteel.
+\item  De zoekoperaties in de Rood-Zwart-Boom (enkel van toepassing voor het finale sweep line-algoritme) enerzijds, en
+\item  Het aantal berekeningen op snijpunten tussen twee cirkels (\texttt{intersect}-oproepen) anderzijds.
 \end{itemize}
+
+Nu maken we de veronderstelling dat voor grote inputs. van deze twee factoren, het aantal berekeningen op snijpunten het meeste zal doorwegen in de totale benodigde uitvoeringstijd. Immers, bij kleine inputs zal de tijd benodigd om de alle benodigde datastructuren te initialiseren, de tijd van het kleine aantal \texttt{intersect}-operaties overschaduwen. Naargelang de input groeit, verwachten dat hiermee ook het aandeel van de aantal \texttt{intersect}-operaties in de totale uitvoeringstijd groeit. Om deze veronderstelling te bevestigen, testen we dit experimenteel.
+
+We laten de drie algoritmes lopen op willekeurige verzamelingen cirkels in het $ (1,1) \times (1,1)$-vlak. Deze verzamelingen van cirkels laten we toenemen in grootte, gaande van $5$ tot en met $1000$. Vervolgens plotten we de verhouding $$\frac{\text{Uitvoeringstijd}}{\text{Aantal \texttt{intersect}-oproepen}}$$ in functie van de inputgrootte, $N$. We bekomen de plot weergegeven in figuur \ref{fig:verhouding}. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{../plots/ExecutionTimesToCompares.png}
+	\caption{Verhouding: $\frac{\text{Uitvoeringstijd}}{\text{Aantal \texttt{intersect}-oproepen}}$}
+	\label{fig:verhouding}
+\end{figure}
+
+We zien dat inderdaad onze vermoedens bevestigd worden: voor kleine inputs overheerst de tijd vereist om de datastructuren e.d. te initialiseren, maar naarmate de input groeit, wordt het aantal \texttt{intersect}-oproepen dominant in de uitvoeringstijd. Bijgevolg zal de berekende verhouding steeds krimpen en $1$ benaderen.
+
+Met deze argumentatie op zak kunnen we onze volgende experimenten verderzetten in functie van het aantal compares, in het achterhoofd houdende dat dit asymptotisch evenredig is met de totale uitvoeringstijd.
 
 \subsection{Opbouw}
 Om een diverse opbouw van experimenten op te bouwen, delen we ze op in volgende deel-experimenten die elks een verschillend aspect van de algoritmes proberen toe te lichten:
 \begin{itemize}
+	\item \textbf{Positionering Cirkels}\\
+	Hier testen we uit hoe verschillende onderlinge liggingen van cirkels ten opzichte van elkaar invloed hebben op de efficiëntie van de algoritmen, zoals we ook hebben besproken in de vorige respectievelijke secties over tijdscomplexiteit.
 	\item \textbf{Aantal Cirkels}\\
 		In dit eerste experiment analyseren we eenvoudigweg wat het aantal \texttt{intersect}-oproepen is in functie van het aantal cirkels dat als input gegeven wordt. 
-	\item \textbf{Positionering Cirkels}\\
-		Hier testen we uit hoe verschillende onderlinge liggingen van cirkels ten opzichte van elkaar invloed hebben op de efficiëntie van de algoritmen, zoals we ook hebben besproken in de vorige respectievelijke secties over tijdscomplexiteit.
 \end{itemize}
 
+
+\subsection{Positionering Cirkels}
+We bekijken enkel de effecten van specifieke positionering van de invoer-cirkels op de verschillende algoritmes.
+
+\subsubsection{Cirkels in disjuncte $x$-intervallen}
+In dit onderdeel gaan we na wat de efficiëntie van de algoritmes is op een invoer waarbij alle cirkels gelegen zijn in disjuncte $x$-intervallen. Hiermee bedoelen we dat voor elke cirkel $C_1$ geldt dat geen enkele andere cirkel $C_2$ start of eindigt binnen de $x$-coördinaten waarover $C_1$ zich uitstrekt.
+
+\paragraph{Naïeve Intersection-methode}
+Eerst kijken we wat het effect van het gebruik van een naïeve implementatie van de \texttt{intersect}-methode is, naïef in de zin dat we geen gebruik maken van quick-rejection tests en we dus bij elke oproep van de methode de volledige methode en bijbehorende berekeningen uitvoeren. We plotten het aantal \texttt{intersect}-oproepen in functie van de inputgrootte $N$ en bekomen de plot uit figuur \ref{fig:NaiveIntersections}.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.5\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{../plots/NaiveIntersections}
+	\captionof{figure}{Aantal \texttt{intersect}\\-oproepen i.f.v. inputgrootte $N$}
+	\label{fig:NaiveIntersections}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{../plots/IntersectionsQuickReject}
+	\captionof{figure}{Aantal \texttt{intersect}-oproepen i.f.v. inputgrootte $N$}
+	\label{fig:Intersections}
+\end{minipage}
+\end{figure}
+
+Deze resultaten stroken onze verwachtingen: aangezien het brute-force algoritme elk paar van cirkels onderling test op snijpunten, verwachten we een aantal \texttt{intersect}-oproepen dat nog steeds kwadratisch zal toenemen: de uitvoering van het brute-force algoritme is namelijk onafhankelijk van de ligging van de cirkels. 
+
+Beide sweep line-algoritmes zullen echter geen enkele \texttt{intersection}-oproep maken, aangezien de $x$-intervallen waarbinnen de cirkels liggen onderling disjunct zijn, en bijgevolg elke cirkel individueel steeds als enige element aanwezig zal zijn in de  \texttt{Actief}-datastructuur. Deze argumentatie komt overeen met de resultaten uit figuur \ref{fig:NaiveIntersections}.
+
+\paragraph{Efficiëntere Intersection-methode}
+In deze efficiëntere implementatie van de \texttt{intersection}-methode maken we gebruik van een quick-rejection test om paren van cirkels die onmogelijk kunnen snijden, meteen te verwerpen zonder dat we hiervoor alle berekeningen moeten uitvoeren. Deze quick-rejection test verwerpt de mogelijkheid dat twee cirkels snijden indien de afstand tussen hun middelpunten $d$ kleiner dan het verschil van hun stralen, of groter dan de som van hun stralen is. Indien we nu de resultaten plotten zoals we bij figuur \ref{fig:NaiveIntersections} deden, bekomen we de plot die weergegeven is in figuur \ref{fig:Intersections}.
+
+Nu is ook het aantal \texttt{intersection}-oproepen van het brute force-algoritme constant en gelijk aan $0$. Dit valt te verklaren doordat de quick-rejection test bij deze specifieke invoer alle paren van cirkels direct kan verwerpen op mogelijke snijpunten, doordat elke cirkel zich bevindt in een geïsloeerd $x$-interval. Deze versie van de \texttt{intersect}-methode is dan ook degene die we zullen gebruiken doorheen de rest van de experimenten, alsook de versie die in de beschrijving van de werking van de algoritmes is gebruikt. 
+
 \subsection{Aantal Cirkels}
-In dit eerste experiment testen we de drie algoritmes op eenzelfde input, die toeneemt tot een aantal van zo'n $1000$ input-cirkels waarvan de snijpunten moeten gevonden worden:
+In dit eerste experiment testen we de drie algoritmes op eenzelfde input, die toeneemt tot een aantal van zo'n $1000$ input-cirkels waarvan de snijpunten moeten gevonden worden. We plotten de bekomen data en bekomen het resultaat weergegeven in figuur \ref{fig:IntersectionsIfvN}. 
 
-\begin{center}
-	\makebox[\textwidth]{\includegraphics[width=\linewidth]{../plots/ThreeAlgorithmsVisualised}}
-\end{center}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{../plots/ThreeAlgorithmsVisualised.png}
+	\caption{Aantal \texttt{intersection}-oproepen i.f.v. invoergrootte $N$}
+	\label{fig:IntersectionsIfvN}
+\end{figure}
 
-Hierbij stellen we vast dat zowel de brute force algoritme als het naïeve sweep line-algoritme een kwadratisch verloop vertonen, qua aantal `intersect'-operaties in functie van het aantal input-cirkels.
+Steunend op de argumentatie van de vorige paragraaf, kunnen we deze resultaten interpreteren als volgt. De naïeve implementatie van de sweepline en het brute force-algoritme gedragen zich asymptotisch gezien gelijkaardig. We bepalen de groei-orde van het aantal \texttt{intersect}-oproepen met behulp van het doubling ratio experiment. Noem $T(N)$ het aantal \texttt{intersect}-oproepen voor een invoergrootte van $N$. Uit onze data, of door af te lezen op de plot, weten we dat:
+\begin{align*}
+T(1000) &\approx 350000 \quad\text{en}\\
+T(500) &\approx 87000
+\end{align*}
+Hieruit volgt:
+\begin{equation*}
+\frac{T(2N)}{T(N)} = \frac{T(1000)}{T(500)} \approx \frac{350000}{87000} \approx 4
+\end{equation*}
+Bij een verdubbeling van de invoergrootte, stijgt het aantal \texttt{intersect}-operaties dus met een factor $4  =2^b$. Aangezien volgens het Doubling Ratio Experiment de groei-orde bij benadering wordt gegeven door $N^b$ en $4 = 2^2$, besluiten we dat zowel het brute-force als naïef sweepline-algoritme een kwardratsiche tijdscomplexiteit hebben:, of met andere woorden: ze gedragen zich $\mathcal{O}(N^2)$ met $N$ de inputgrootte. Dit bevestigt onze argumentatie die we gemaakt hebben in secties \ref{sec:brute-force} en \ref{sec:naiveSL}.
 
+%TODO Checken of dit wel acceptabele uitleg is
+Het verschil in groei van grootte-orde tussen de naïeve en efficiënte implementatie van het sweep line-algoritme kunnen we verklaren doordat het naïeve sweep line-algoritme essentieel enkel filtert op de $x$-intervallen van de cirkels om \texttt{intersect}-oproepen tussen cirkels die onmogelijk kunenn snijden te vermijden. De efficiënte implementatie daarentegen, maakt ook gebruik van de totale orde relatie $>_a$, wat het mogelijk maakt om op elke gegeven $x$-coördinaat hoogstens twee \texttt{intersect}-oproepen te moeten maken: een voor \texttt{Boven(Actief, huidig)} en een voor \texttt{Onder(Actief, huidig)}.
 
-%\begin{figure}[h!]
-%	\centering
-%	
-%	\caption[Aantal intersect-operaties in functie van het aantal cirkels]{}
-%	\label{fig:variabeleN}
-%\end{figure}
+ Aangezien alle cirkels binnen het interval $[0,1]$ werden gegenereerd, is er een zeer grote graad van overlap, wat betreft $x$-coördinaten van cirkels. Bijgevolg zal het naïeve sweep line-algoritme slechts enkele \texttt{intersection}-oproepen kunnen vermijden, terwijl de efficiënte versie het grootste deel van de oproepen kan uitsluiten door ook op $y$-coördinaat efficiënt de \texttt{intersection}-oproepen te selecteren.
+
+\section{Randgevallen}
+We omschrijven ten slotte voor de verschillende algoritmes welke randgevallen incorrecte resultaten kunnen opleveren.
+
+\subsection{Brute Force Algoritme}
+
+\subsection{Naïef Sweep Line-algoritme}
+
+\subsection{Sweep Line-algoritme}
+\subsubsection{Drievoudig Snijpunt}
+Indien de cirkels zodanig geplaatst zijn dat er een drievoudig snijpunt optreedt, zal het efficiënte sweep line-algoritme overbodige oplossingen voor snijpunten geven. Het zal het drievoudig snijpunt drie keer vinden, in combinatie met de overige snijpunten, wat correct is, maar het zal elk individueel snijpunt nog een extra keer als snijpunt classificeren. Een mogelijke oplossing hiervoor zou zijn %TODO
+
 
 
 \end{document}

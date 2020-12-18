@@ -4,10 +4,11 @@ import java.util.Random;
 
 public class InputGen {
     public static void main(String[] args) throws IOException {
-        int N = 1000;
+        int N = 100;
         int iterations = 1;
-//        generateTimeData(N, iterations);
-        generateData(N, iterations);
+//        generateData(N, iterations);
+        Circle[] circles = new Circle[]{new Circle(0.2, 0.2, 0.2), new Circle(0.6, 0.2, 0.2), new Circle(0.4, 0.4, 0.2)};
+        Main.sweepLine(circles);
     }
 
     public static void generateData(int dataPoints, int step) throws IOException {
@@ -71,7 +72,7 @@ public class InputGen {
         System.out.println("Finished calculating all " + dataPoints + " iterations.");
     }
     public static int[] countIntersects(int N) throws IOException {
-        Circle[] circles = generateCircles(N);
+        Circle[] circles = generateAdjacentCircles(N);
         int[] counts = new int[3];
 
         Main.c.reset();
@@ -121,6 +122,22 @@ public class InputGen {
             y = minVal + (maxVal - minVal) * rand.nextDouble();
             r = minVal + (maxVal - minVal) * rand.nextDouble();
             circles[i] = new Circle(Main.myRound(x,2), Main.myRound(y,2), Main.myRound(r,2));
+        }
+        return circles;
+    }
+
+    public static Circle[] generateAdjacentCircles(int N) {
+        Circle[] circles = new Circle[N];
+        Circle c;
+        double x, y, r, max;
+        r  = 1.0/ N;
+        x = max = 0;
+        y = 0.5;
+
+        for (int i = 0; i < N; i++) {
+            x = max + 0.02;
+            circles[i] = new Circle(Main.myRound(x,2), Main.myRound(y,2), Main.myRound(r,2));
+            max = x + 2 * r;
         }
         return circles;
     }

@@ -286,10 +286,10 @@ static class pointComparator implements Comparator<Point> {
         double centerY = y1 - y2;
         double R = sqrt(centerX * centerX + centerY * centerY);
 
+        c.inc();
         if (!(abs(r1 - r2) <= R && R <= r1 + r2))
             return new Point[0]; // no intersection points
 
-        c.inc();
 
         double R2 = R*R;
         double R4 = R2*R2;

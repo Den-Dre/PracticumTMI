@@ -8,7 +8,7 @@ from matplotlib import style
 
 
 def plotter():
-    # plt.rcParams.update({'font.size': 22})
+    plt.rcParams.update({'font.size': 22})
     style.use('ggplot')
 
 # Compares
@@ -18,14 +18,14 @@ def plotter():
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    plt.title('Plots based on compares')
+    plt.title('Intersect-oproepen i.f.v. inputgrootte N')
     plt.ylabel('Intersections')
-    plt.xlabel('Number of Circles')
+    plt.xlabel('Aantal cirkels N')
     # ax = plt.subplot(111)
 
     ax.plot(x_bf, y_bf, label="Brute Force", alpha=0.5, c="b", ls="solid")
-    ax.plot(x_bf, y_nsl, label="Naive Sweepline", c="r", ls="dotted", linewidth=1.5)
-    ax.plot(x_bf, y_sl, label="Sweepline", c="m")
+    ax.plot(x_bf, y_nsl, label="Naive Sweepline", alpha=0.5, c="r", ls="dotted", linewidth=2.5)
+    ax.plot(x_bf, y_sl, label="Sweepline", alpha=0.5, c="m")
     plt.legend()
     # plt.show()
 
@@ -45,10 +45,22 @@ def plotter():
     ax2.plot(x_bf2, y_nsl2, label="Naive Sweepline", c="r", ls="dotted", linewidth=1.5)
     ax2.plot(x_bf2, y_sl2, label="Sweepline", c="m")
     plt.legend()
+
+# Ratio
+#     fig = plt.figure()
+#     ax3 = fig.add_subplot(111)
+#
+#     plt.title('Vergelijking: uitvoeringstijd & aantal vergelijkingen')
+#     plt.ylabel('Verhouding: uitvoeringstijd / aantal vergelijkingen')
+#     plt.xlabel('Aantal cirkels')
+#
+#     ax3.plot(x_bf2[5:], y_bf2[5:]/y_bf[5:], label="Brute Force", alpha=0.5, c="b", ls="solid")
+#     ax3.plot(x_bf2[5:], y_nsl2[5:]/y_nsl[5:], label="Naive Sweepline", c="r", ls="dotted", linewidth=5.5)
+#     ax3.plot(x_bf2[5:], y_sl2[5:]/y_sl[5:], label="Sweepline", c="m", linewidth=0.5)
+#     plt.legend()
     plt.show()
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     plotter()
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
