@@ -355,7 +355,6 @@ static class pointComparator implements Comparator<Point> {
         if (abs(ix1 - ix2) < 1e-7 && abs(iy1 - iy2) < 1e-7)
            solutions = new Point[]{new Point(ix1, iy1)};
 
-        // TODO: mogelijks nog vermijden dat snijpunten die op join punten van UPPER en LOWER half liggen, dunbbel worden gevonden
         Orientation o1 = c1.getOrientation();
         Orientation o2 = c2.getOrientation();
         if (o1 == Orientation.UPPER && o2 == Orientation.UPPER)
