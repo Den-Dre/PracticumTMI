@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1608475355 "VerslagPracticumTMI.tex" "VerslagPracticumTMI.pdf" "VerslagPracticumTMI" 1608475356
+["pdflatex"] 1608485087 "VerslagPracticumTMI.tex" "VerslagPracticumTMI.pdf" "VerslagPracticumTMI" 1608485088
   "../plots/ExecutionTimesToCompares.png" 1608298294 55655 cf4362cb849a00e36ee756b62f9ee0c9 ""
   "../plots/IntersectionsCirkelsStacked.png" 1608452109 36470 1ed025570c4c0fcdf1ac963868a3f842 ""
   "../plots/IntersectionsQuickReject.png" 1608309764 27980 f293dfbaaf6111a7bed25ed9b780e3c9 ""
@@ -119,9 +119,9 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1606492882 4770781 1ed1abab22da9c3e2cc82e4db562318b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1606492913 8256625 01ae95c26c58bc589d36be8b0670d609 ""
-  "VerslagPracticumTMI.aux" 1608475356 5208 245bab635ac5cf1e97e513dfa05c986b "pdflatex"
-  "VerslagPracticumTMI.tex" 1608475355 33104 c7986ff560b125817b25b9d852ebd799 ""
+  "VerslagPracticumTMI.aux" 1608485088 5208 245bab635ac5cf1e97e513dfa05c986b "pdflatex"
+  "VerslagPracticumTMI.tex" 1608485087 33597 01503c19b6d1f0b2e70e90520a9cb3e8 ""
   (generated)
-  "VerslagPracticumTMI.log"
   "VerslagPracticumTMI.aux"
   "VerslagPracticumTMI.pdf"
+  "VerslagPracticumTMI.log"

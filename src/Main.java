@@ -20,15 +20,7 @@ public class Main {
     public static Counter c = new Counter();
 
     public static void main(String[] args) throws IOException {
-//        System.out.println(Arrays.toString(intersect(new HalfCircle(0.5, 0.4, 0.2, null, Orientation.UPPER),
-//                                                     new HalfCircle(0.7, 0.6, 0.3, null, Orientation.LOWER))));
         processInput();
-
-//        RedBlackBST<TipTuple, HalfCircle> active = new RedBlackBST<>();
-//        active.put(new TipTuple(1, new HalfCircle(1, 1, 1, Type.START, Orientation.LOWER)), new HalfCircle(1,1,1,Type.START,Orientation.LOWER) );
-//        active.put(new TipTuple(2, new HalfCircle(2,2,2,Type.START,Orientation.LOWER)), new HalfCircle(2,2,2,Type.START,Orientation.LOWER));
-//        System.out.println(active.floor(new TipTuple(2, new HalfCircle(2,2,2,Type.START,Orientation.LOWER))).getHalfCircle().toString());
-
     }
 
     public static void processInput() throws IOException {
@@ -89,22 +81,7 @@ public class Main {
         List<Point> resPoints = new ArrayList<>();
         List<Point> eventPoints = getEventPoints(circles);
         eventPoints.sort(new pointComparator());
-        // Use treeMap? https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html
        List<Circle> active = new ArrayList<>();
-       // TreeMap<Point, Point> active = new TreeMap<>(/*new pointComparator()*/);
-/*       for (Point p : eventPoints) {
-           if (p.getType() == Type.START) {
-               for (Map.Entry<Point, Point> entry : active.entrySet()) {
-                    Point[] intersecting = intersect(entry.getParent(), p.getParent());
-                    if (intersecting.length > 0) {
-                        Collections.addAll(resPoints, intersecting);
-                    }
-               }
-               active.put(p, p);
-           } else { // p.getType() == Type.END
-                active.remove(p);
-           }
-       }*/ // TODO: Onderstaande methode werkt, vervang dit door bovenstaande die gebruikmaakt van een TreeMap (en pas aan naar TreeMap<Double, Circle> denk ik).
         for (Point p : eventPoints) {
             if (p.getType() == Type.START) {
                 for (Circle candidate : active) {
@@ -119,6 +96,22 @@ public class Main {
             }
         }
        double elapsedTime = sw.getElapsedTime();
+
+        // Versie met een TreeMap: dit is hier echter niet van belang omdat we telkens de ganse TreeMap moeten doorlopen
+        // TreeMap<Point, Point> active = new TreeMap<>(/*new pointComparator()*/);
+/*       for (Point p : eventPoints) {
+           if (p.getType() == Type.START) {
+               for (Map.Entry<Point, Point> entry : active.entrySet()) {
+                    Point[] intersecting = intersect(entry.getParent(), p.getParent());
+                    if (intersecting.length > 0) {
+                        Collections.addAll(resPoints, intersecting);
+                    }
+               }
+               active.put(p, p);
+           } else { // p.getType() == Type.END
+                active.remove(p);
+           }
+       }*/
        generateOutput(resPoints, elapsedTime);
     }
 
@@ -130,16 +123,9 @@ public class Main {
         List<Point> eventPoints = getEventPoints(circles);
         eventPoints.sort(new pointComparator());
         TreeMap<TipTuple, HalfCircle> active = new TreeMap<>();
-//        RedBlackBST<TipTuple, HalfCircle> active1 = new RedBlackBST<>();
         HalfCircle boven, onder, current;
         Point[] intersecting;
 
-        /*
-         TODO: In de input van het voorbeeld wordt er nog één snijpunt niet gevonden, nl.:\\
-         0.41071428571428564 0.6794592695045965 (snijpunt F op screenshot GeoGebra)\\
-         Dit komt omdat op het punt dat eq3 zijn boven semicircle wordt toegevoegd, enkel eq4 zijn LOWER circle er nog in zit, en zijn UPPER circle niet meer.
-         Hierdoor wordt eq3 zijn bovencirkel vergeleken met de UPPER circle van eq2 om snijpunten te vinden, wat niets oplevert.
-        */
         for (Point p : eventPoints) {
             // Start van nieuwe cirkel: voeg twee halfcirkels toe
             if (p.getType() == Type.START) {
@@ -235,11 +221,9 @@ static class pointComparator implements Comparator<Point> {
             } else if (other.getType() == Type.END && point.getType() == Type.START) {
                 return -1;
             } else {
-                //System.out.println("This case is not handled in the pointComparator");
                 return 0;
             }
         } else {
-            //System.out.println("This case is not handled in the pointComparator");
             return 0;
         }
     }
@@ -256,8 +240,6 @@ static class pointComparator implements Comparator<Point> {
     public static List<Point> getEventPoints(Circle[] circles) {
         List<Point> eventPoints = new ArrayList<>();
         for (Circle c : circles) {
-//            eventPoints.add(new Point(Math.round((c.getX() - c.getRadius()) * 1.00)/ 1.00, c.getY(), Type.START, c));
-//            eventPoints.add(new Point(Math.round((c.getX() + c.getRadius()) * 1.00) / 1.00, c.getY(), Type.END, c));
             eventPoints.add(new Point(myRound(c.getX() - c.getRadius(), 4), c.getY(), Type.START, c));
             eventPoints.add(new Point(myRound(c.getX() + c.getRadius(), 4) , c.getY(), Type.END, c));
         }
@@ -307,13 +289,14 @@ static class pointComparator implements Comparator<Point> {
         double iy1 = fy + gy;
         double iy2 = fy - gy;
 
-        // Om dubbele snijpunten te vinden mits rekenfouten
+        // Om te corrigeren voor rekenfouten indien er meervoudige nulpunten zijn
         if (abs(ix1 - ix2) < 1e-7 && abs(iy1 - iy2) < 1e-7)
             return new Point[]{new Point(ix1, iy1)};
 
         return new Point[]{new Point(ix1, iy1), new Point(ix2, iy2)};
     }
 
+    // Gelijkaardig aan bovenstaande methode, maar dan met halfcirkels
     public static Point[] intersect(HalfCircle c1, HalfCircle c2) {
         if (c1.getRadius() == c2.getRadius() && c1.getX() == c2.getX() && c1.getY() == c2.getY())
             return new Point[0];
@@ -365,12 +348,11 @@ static class pointComparator implements Comparator<Point> {
             return Arrays.stream(solutions).filter(p -> p.getY() <  min(c1.getY(), c2.getY() + c2.getRadius()) && p.getY() >  max(c1.getY() - c1.getRadius(), c2.getY())).toArray(Point[]::new);
         else if (o1 == Orientation.LOWER && o2 == Orientation.LOWER)
             return Arrays.stream(solutions).filter(p -> p.getY() <= min(c1.getY(), c2.getY()) && p.getY() >= max(c1.getY() - c1.getRadius(), c2.getY() - c2.getRadius())).toArray(Point[]::new);
-        //else
-        //   throw new OperationNotSupportedException("Not a valid combination of semicircle `Orientation`s");
 
         return solutions;
     }
 
+    // For debugging purposes
     public static String printActive(TreeMap<TipTuple, HalfCircle> treeMap) {
         String res = "";
         Set<Map.Entry<TipTuple, HalfCircle>> entries = treeMap.entrySet();
