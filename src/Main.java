@@ -351,7 +351,7 @@ static class pointComparator implements Comparator<Point> {
 
         Point[] solutions = new Point[]{new Point(ix1, iy1), new Point(ix2, iy2)};
 
-        // Om dubbele snijpunten te detecteren mits rekenfouten
+        // Om dubbelect snijpunten te detecteren mits rekenfouten
         if (abs(ix1 - ix2) < 1e-7 && abs(iy1 - iy2) < 1e-7)
            solutions = new Point[]{new Point(ix1, iy1)};
 
