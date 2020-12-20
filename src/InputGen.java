@@ -7,7 +7,31 @@ public class InputGen {
         int N = 100;
         int iterations = 1;
 //        generateData(N, iterations);
-        Circle[] circles = new Circle[]{new Circle(0.2, 0.2, 0.2), new Circle(0.6, 0.2, 0.2), new Circle(0.4, 0.4, 0.2)};
+
+        // Werkt:
+        // Eén drievoudig snijpunt en de andere snijpnten WEL op de eindpunten van halfcirkels
+        //Circle[] circles = new Circle[]{new Circle(0.2, 0.2, 0.2), new Circle(0.6, 0.2, 0.2), new Circle(0.4, 0.4, 0.2)};
+
+        // Werkt:
+        // Eén drievoudig snijpunt, en de andere snijpunten NIET op de eindpunten van halfcirkels
+        //Circle[] circles = new Circle[]{new Circle(0.2, 0.2, 0.2), new Circle(0.4, 0.4, 0.2)/*, new Circle(0.35, 0.45, 0.1)*/};
+
+        // Werkt:
+        // Normaal geval
+        //Circle[] circles = new Circle[]{new Circle(0.2, 0.2, 0.2), new Circle(0.5, 0.3, 0.3), new Circle(0.2, 0.45, 0.2)};
+
+        // Werkt:
+        // Twee snijpunten in eindpunten halfcirkels:
+        //Circle[] circles = new Circle[]{new Circle(0.2, 0.2, 0.2), new Circle(0.4, 0.4, 0.2)};
+
+        // Werkt:
+        //Overlappende cirkels
+        //Circle[] circles = new Circle[]{new Circle(0.2, 0.2, 0.2), new Circle(0.2, 0.2, 0.2)};
+
+        // Werkt? geen snijpunten
+        // Cirkel in de andere, met één snijpunt
+        Circle[] circles = new Circle[]{new Circle(0.5, 0.2, 0.2), new Circle(0.5, 0.4, 0.4)};
+
         Main.sweepLine(circles);
     }
 
@@ -72,7 +96,7 @@ public class InputGen {
         System.out.println("Finished calculating all " + dataPoints + " iterations.");
     }
     public static int[] countIntersects(int N) throws IOException {
-        Circle[] circles = generateAdjacentCircles(N);
+        Circle[] circles = generateStackedCircles(N);
         int[] counts = new int[3];
 
         Main.c.reset();
@@ -138,6 +162,21 @@ public class InputGen {
             x = max + 0.02;
             circles[i] = new Circle(Main.myRound(x,2), Main.myRound(y,2), Main.myRound(r,2));
             max = x + 2 * r;
+        }
+        return circles;
+    }
+    public static Circle[] generateStackedCircles(int N) {
+        Circle[] circles = new Circle[N];
+        Circle c;
+        double x, y, r, max;
+        r = 1.0 / N;
+        y = max = 0;
+        x = 0.5;
+
+        for (int i = 0; i < N; i++) {
+            y = max + 0.02;
+            circles[i] = new Circle(Main.myRound(x, 2), Main.myRound(y, 2), Main.myRound(r, 2));
+            max = y + 2 * r;
         }
         return circles;
     }

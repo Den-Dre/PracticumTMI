@@ -307,22 +307,9 @@ static class pointComparator implements Comparator<Point> {
         double iy1 = fy + gy;
         double iy2 = fy - gy;
 
-
-        /*        if (c1 instanceof HalfCircle && c2 instanceof HalfCircle) {
-            Orientation o1 = ((HalfCircle) c1).getOrientation();
-            Orientation o2 = ((HalfCircle) c2).getOrientation();
-            if (o1 == Orientation.UPPER && o2 == Orientation.UPPER)
-                return Arrays.stream(solutions).filter(p -> p.getY() <= c1.getY() + c1.getRadius() && p.getY() <= c2.getY() + c2.getRadius()).toArray(Point[]::new);
-            else if (o1 == Orientation.UPPER && o2 == Orientation.LOWER)
-                return Arrays.stream(solutions).filter(p -> p.getY() <= c1.getY() + c1.getRadius() && p.getY() >= c2.getY() - c2.getRadius()).toArray(Point[]::new);
-            else if (o1 == Orientation.LOWER && o2 == Orientation.UPPER)
-                return Arrays.stream(solutions).filter(p -> p.getY() >= c1.getY() - c1.getRadius() && p.getY() <= c2.getY() + c2.getRadius()).toArray(Point[]::new);
-            else if (o1 == Orientation.LOWER && o2 == Orientation.LOWER)
-                return Arrays.stream(solutions).filter(p -> p.getY() >= c1.getY() - c1.getRadius() && p.getY() >= c2.getY() - c2.getRadius()).toArray(Point[]::new);
-            //else
-            //   throw new OperationNotSupportedException("Not a valid combination of semicircle `Orientation`s");
-        }*/
-
+        // Om dubbele snijpunten te vinden mits rekenfouten
+        if (abs(ix1 - ix2) < 1e-7 && abs(iy1 - iy2) < 1e-7)
+            return new Point[]{new Point(ix1, iy1)};
 
         return new Point[]{new Point(ix1, iy1), new Point(ix2, iy2)};
     }
@@ -364,15 +351,19 @@ static class pointComparator implements Comparator<Point> {
 
         Point[] solutions = new Point[]{new Point(ix1, iy1), new Point(ix2, iy2)};
 
+        // Om dubbele snijpunten te detecteren mits rekenfouten
+        if (abs(ix1 - ix2) < 1e-7 && abs(iy1 - iy2) < 1e-7)
+           solutions = new Point[]{new Point(ix1, iy1)};
+
         // TODO: mogelijks nog vermijden dat snijpunten die op join punten van UPPER en LOWER half liggen, dunbbel worden gevonden
         Orientation o1 = c1.getOrientation();
         Orientation o2 = c2.getOrientation();
         if (o1 == Orientation.UPPER && o2 == Orientation.UPPER)
             return Arrays.stream(solutions).filter(p -> p.getY() <= min(c1.getY() + c1.getRadius(), c2.getY() + c2.getRadius()) && p.getY() >= max(c1.getY(), c2.getY())).toArray(Point[]::new);
         else if (o1 == Orientation.UPPER && o2 == Orientation.LOWER)
-            return Arrays.stream(solutions).filter(p -> p.getY() <= min(c1.getY() + c1.getRadius(), c2.getY()) && p.getY() >= max(c1.getY(), c2.getY() - c2.getRadius())).toArray(Point[]::new);
+            return Arrays.stream(solutions).filter(p -> p.getY() <  min(c1.getY() + c1.getRadius(), c2.getY()) && p.getY() >  max(c1.getY(), c2.getY() - c2.getRadius())).toArray(Point[]::new);
         else if (o1 == Orientation.LOWER && o2 == Orientation.UPPER)
-            return Arrays.stream(solutions).filter(p -> p.getY() <= min(c1.getY(), c2.getY() + c2.getRadius()) && p.getY() >= max(c1.getY() - c1.getRadius(), c2.getY())).toArray(Point[]::new);
+            return Arrays.stream(solutions).filter(p -> p.getY() <  min(c1.getY(), c2.getY() + c2.getRadius()) && p.getY() >  max(c1.getY() - c1.getRadius(), c2.getY())).toArray(Point[]::new);
         else if (o1 == Orientation.LOWER && o2 == Orientation.LOWER)
             return Arrays.stream(solutions).filter(p -> p.getY() <= min(c1.getY(), c2.getY()) && p.getY() >= max(c1.getY() - c1.getRadius(), c2.getY() - c2.getRadius())).toArray(Point[]::new);
         //else
