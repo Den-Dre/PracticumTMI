@@ -18,9 +18,9 @@ def plotter():
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    plt.title('Intersect-oproepen i.f.v. inputgrootte N')
-    plt.ylabel('Intersections')
-    plt.xlabel('Aantal cirkels N')
+    plt.title('Aantal intersect-oproepen i.f.v. van 100 cirkels met gelijke straal')
+    plt.ylabel('Intersect-oproepen')
+    plt.xlabel('Straal van elke cirkel')
     # ax = plt.subplot(111)
 
     ax.plot(x_bf, y_bf,  label="Brute Force",     alpha=0.5, c="b", ls="solid")
@@ -30,21 +30,21 @@ def plotter():
     # plt.show()
 
 # Times
-    x_bf2, y_bf2 = np.loadtxt('./times/bruteForceTime.txt',       unpack=True, delimiter=',')
-    x_nsl2, y_nsl2 = np.loadtxt('./times/naiveSweeplineTime.txt', unpack=True, delimiter=',')
-    x_sl2, y_sl2 = np.loadtxt('./times/sweepLineTime.txt',        unpack=True, delimiter=',')
-    fig2 = plt.figure()
-    ax2 = fig2.add_subplot(111)
-
-    plt.title('Plots based on execution times')
-    plt.ylabel('Execution time (milliseconds)')
-    plt.xlabel('Number of Circles')
-    # ax = plt.subplot(111)
-
-    ax2.plot(x_bf2, y_bf2,  label="Brute Force",     alpha=0.5, c="b", ls="solid")
-    ax2.plot(x_bf2, y_nsl2, label="Naive Sweepline",            c="r", ls="dotted", linewidth=1.5)
-    ax2.plot(x_bf2, y_sl2,  label="Sweepline",                  c="m")
-    plt.legend()
+#     x_bf2, y_bf2 = np.loadtxt('./times/bruteForceTime.txt',       unpack=True, delimiter=',')
+#     x_nsl2, y_nsl2 = np.loadtxt('./times/naiveSweeplineTime.txt', unpack=True, delimiter=',')
+#     x_sl2, y_sl2 = np.loadtxt('./times/sweepLineTime.txt',        unpack=True, delimiter=',')
+#     fig2 = plt.figure()
+#     ax2 = fig2.add_subplot(111)
+#
+#     plt.title('Plots based on execution times')
+#     plt.ylabel('Execution time (milliseconds)')
+#     plt.xlabel('Number of Circles')
+#     # ax = plt.subplot(111)
+#
+#     ax2.plot(x_bf2, y_bf2,  label="Brute Force",     alpha=0.5, c="b", ls="solid")
+#     ax2.plot(x_bf2, y_nsl2, label="Naive Sweepline",            c="r", ls="dotted", linewidth=1.5)
+#     ax2.plot(x_bf2, y_sl2,  label="Sweepline",                  c="m")
+#     plt.legend()
 
 # Ratio
 #     fig = plt.figure()

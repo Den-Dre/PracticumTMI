@@ -1,10 +1,11 @@
 # Fdb version 3
-["pdflatex"] 1608485087 "VerslagPracticumTMI.tex" "VerslagPracticumTMI.pdf" "VerslagPracticumTMI" 1608485088
+["pdflatex"] 1608495941 "VerslagPracticumTMI.tex" "VerslagPracticumTMI.pdf" "VerslagPracticumTMI" 1608495942
   "../plots/ExecutionTimesToCompares.png" 1608298294 55655 cf4362cb849a00e36ee756b62f9ee0c9 ""
   "../plots/IntersectionsCirkelsStacked.png" 1608452109 36470 1ed025570c4c0fcdf1ac963868a3f842 ""
   "../plots/IntersectionsQuickReject.png" 1608309764 27980 f293dfbaaf6111a7bed25ed9b780e3c9 ""
   "../plots/NaiveIntersections.png" 1608308746 35933 3b6948219afa239f99e7731e38f6bc6b ""
   "../plots/ThreeAlgorithmsVisualised.png" 1608224085 42170 a1ed566b66593770930586fb8170895c ""
+  "../plots/ToenemendeStraal.png" 1608495372 54667 27cb2f21946bccd5d15d79832e7dc037 ""
   "/etc/texmf/web2c/texmf.cnf" 1606492875 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx0600.tfm" 1136768653 3584 ad9fcbc26a2a7bccd6d08b0a5792fbe0 ""
@@ -119,9 +120,9 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1606492882 4770781 1ed1abab22da9c3e2cc82e4db562318b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1606492913 8256625 01ae95c26c58bc589d36be8b0670d609 ""
-  "VerslagPracticumTMI.aux" 1608485088 5208 245bab635ac5cf1e97e513dfa05c986b "pdflatex"
-  "VerslagPracticumTMI.tex" 1608485087 33597 01503c19b6d1f0b2e70e90520a9cb3e8 ""
+  "VerslagPracticumTMI.aux" 1608495942 5430 49270728db99ade92574847fb9c66157 "pdflatex"
+  "VerslagPracticumTMI.tex" 1608495940 36699 eecae4f47d6949489e9ac20a695d4937 ""
   (generated)
-  "VerslagPracticumTMI.aux"
   "VerslagPracticumTMI.pdf"
+  "VerslagPracticumTMI.aux"
   "VerslagPracticumTMI.log"
